@@ -16,8 +16,8 @@ public:
         }
     }
 
-    void addEdge(int x, int y, int w) {
-        edges[x].push_back({w, y});
+    void addEdge(int x, int y, int t0, int P, int d) {
+        edges[x].push_back({t0, P, d, y});
     }
 
     vector<pair<long, int>> findPaths(int start) {
@@ -42,11 +42,22 @@ public:
                 vector<vector<int>> neighs = edges[curr[1]];
                 for(auto & n : neighs) {
                     if(n[0] != -1) {
-                        if(!visited[n[1]]) {
-                            if(path[n[1]].first > -curr[0] + n[0] || path[n[1]].first == -1) {
-                                path[n[1]] = {-curr[0] + n[0], curr[1]};
+                        if(!visited[n[3]]) {
+                            int nextt = 0;
+                            if(-curr[0] < n[0]) {
+                                nextt = n[0];
+                            } else if(n[1] == 0) {
+                                continue;
+                            } else if((-curr[0] - n[0]) % n[1] == 0){
+                                nextt = -curr[0];
+                            } else {
+                                nextt = n[1] * (((-curr[0] - n[0])/n[1]) + 1) + n[0];
                             }
-                            queue.push({curr[0] - n[0], n[1]});
+
+                            if(path[n[3]].first > nextt + n[2] || path[n[3]].first == -1) {
+                                path[n[3]] = {nextt + n[2], curr[1]};
+                            }
+                            queue.push({-nextt - n[2], n[3]});
                         }
                     }
                 }
@@ -66,10 +77,12 @@ int main() {
         Graph g(nodes);
         int x;
         int y;
-        int w;
+        int t0;
+        int P;
+        int d;
         for(int i = 0; i < edges; i++) {
-            cin >> x >> y >> w;
-            g.addEdge(x, y, w);
+            cin >> x >> y >> t0 >> P >> d;
+            g.addEdge(x, y, t0, P, d);
         }
 
         int goal;
