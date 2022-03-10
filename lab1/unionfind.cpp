@@ -2,8 +2,11 @@
  * @file unionfind.cpp
  * @author Annie Wång (annwa858@student.liu.se)
  * @brief contains a disjoint set class which implements a unionfind algorithm.
- *        The complexity of the find function is O(logn) for both unionizing
- *        two itemsets and checking if two items are in the same set.
+ *        The complexity of the find function is constant for both unionizing
+ *        two itemsets and checking if two items are in the same set. It is
+ *        because tree compression and rank unionizing that it is constant, see
+ *        https://en.wikipedia.org/wiki/Disjoint-set_data_structure#Time_complexity
+ *        for a more in depth analysis.
  * @date 2022-02-03
  */
 #include <iostream>
@@ -31,6 +34,11 @@ public:
         createSet();
     }
 
+    ~DisjointSet() {
+        delete[] rank;
+        delete[] parent;
+    }
+
     // create n different sets containing 1 item each.
     void createSet() {
         for(int i = 0; i < n; i++) {
@@ -42,11 +50,10 @@ public:
     // finds the set containing x. Will shorten the parent path directly to
     // root to shorten future checks.
     int find(int x) {
-        int root = x;
-        while(root != parent[root]) {
-            root = parent[root];
+        if(parent[x] != x) {
+            parent[x] = find(parent[x]);
         }
-        return root;
+        return parent[x];
     }
 
     // just prettier to call function in main than to do compare.
