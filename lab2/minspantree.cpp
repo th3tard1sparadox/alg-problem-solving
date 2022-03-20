@@ -1,3 +1,11 @@
+/**
+ * @file minspantree.cpp
+ * @author Annie Wång (annwa858@student.liu.se)
+ * @brief implements kruskal's algotithm for finding minimum spanning trees
+ *        with unionfind as cycle detection. Complexity is O(eloge) where e is
+ *        edges.
+ * @date 2022-03-11
+ */
 #include <iostream>
 #include <math.h>
 #include <vector>
@@ -6,6 +14,9 @@
 
 using namespace std;
 
+/**
+ * simple union find.
+ */
 class CyFinder {
     int* parent;
     int* rank;
@@ -19,6 +30,11 @@ public:
             parent[i] = i;
             rank[i] = 1;
         }
+    }
+
+    ~CyFinder() {
+        delete[] parent;
+        delete[] rank;
     }
 
     int find(int i) {
@@ -45,6 +61,9 @@ public:
     }
 };
 
+/**
+ * Graph implements kruskal's. saves edges in vector.
+ */
 class Graph {
     vector<vector<int>> edges;
     int v;
@@ -58,8 +77,10 @@ public:
         edges.push_back({w, x, y});
     }
 
+    // returns the edges which are used in the minimum spanning tree.
     vector<vector<long>> kruskals() {
         vector<vector<long>> minTree;
+        // sort edges since Kattis asked for the output to be sorted.
         sort(edges.begin(), edges.end());
         CyFinder s((int)v);
         long cost = 0;
@@ -68,17 +89,23 @@ public:
             int x = edge[1];
             int y = edge[2];
 
+            // if they have the same parent they are in a cycle.
             if(s.find(x) != s.find(y)) {
                 minTree.push_back({x, y});
                 s.unite(x, y);
                 cost += w;
             }
         }
+        // add the tree cost to the bagining to make it easy to pick out.
         minTree.insert(minTree.begin(), {cost});
         return minTree;
     }
 };
 
+/**
+ * not very smart way to check of the tree is validly spanning, aka if the
+ * graph was disjoint.
+ */
 bool validSpTree(Graph g, int v, vector<vector<long>> tree) {
     bool cov[v];
     for(int i = 0; i < v; i++) {
@@ -99,9 +126,12 @@ bool validSpTree(Graph g, int v, vector<vector<long>> tree) {
 }
 
 int main() {
+    // io optimizations just in case cause (not really necessary with this
+    // problem).
     ios::sync_with_stdio(false);
     cin.tie(NULL);
 
+    // read io.
     int verticies;
     int edges;
     cin >> verticies;
@@ -122,10 +152,12 @@ int main() {
             }
         }
 
+        // quick check just to see that we actually can make a spanning tree.
         if(edges >= verticies - 1) {
             vector<vector<long>> minTree = g.kruskals();
             long cost = minTree.front()[0];
             minTree.erase(minTree.begin());
+            // output.
             if(validSpTree(g, verticies, minTree)) {
                 cout << cost << "\n";
                 sort(minTree.begin(), minTree.end());
