@@ -3,7 +3,9 @@
  * @author Annie Wång (annwa858@student.liu.se)
  * @brief implements kruskal's algotithm for finding minimum spanning trees
  *        with unionfind as cycle detection. Complexity is O(eloge) where e is
- *        edges.
+ *        edges. This it it's complexity as we first sort the vectors, and then
+ *        we just iterate through them. Sorting is done in O(nlogn) time and
+ *        iterating is O(n), so them combined are O(nlogn + n) = O(nlogn).
  * @date 2022-03-11
  */
 #include <iostream>
@@ -78,9 +80,10 @@ public:
     }
 
     // returns the edges which are used in the minimum spanning tree.
-    vector<vector<long>> kruskals() {
-        vector<vector<long>> minTree;
-        // sort edges since Kattis asked for the output to be sorted.
+    pair<long, vector<vector<int>>> kruskals() {
+        pair<long, vector<vector<int>>> sol;
+        vector<vector<int>> minTree;
+
         sort(edges.begin(), edges.end());
         CyFinder s((int)v);
         long cost = 0;
@@ -96,9 +99,10 @@ public:
                 cost += w;
             }
         }
-        // add the tree cost to the bagining to make it easy to pick out.
-        minTree.insert(minTree.begin(), {cost});
-        return minTree;
+        // add cost and tree to the solution.
+        sol.first = cost;
+        sol.second = minTree;
+        return sol;
     }
 };
 
@@ -106,7 +110,7 @@ public:
  * not very smart way to check of the tree is validly spanning, aka if the
  * graph was disjoint.
  */
-bool validSpTree(Graph g, int v, vector<vector<long>> tree) {
+bool validSpTree(Graph g, int v, vector<vector<int>> tree) {
     bool cov[v];
     for(int i = 0; i < v; i++) {
         cov[i] = false;
@@ -154,9 +158,9 @@ int main() {
 
         // quick check just to see that we actually can make a spanning tree.
         if(edges >= verticies - 1) {
-            vector<vector<long>> minTree = g.kruskals();
-            long cost = minTree.front()[0];
-            minTree.erase(minTree.begin());
+            pair<long, vector<vector<int>>> solution = g.kruskals();
+            vector<vector<int>> minTree = solution.second;
+            long cost = solution.first;
             // output.
             if(validSpTree(g, verticies, minTree)) {
                 cout << cost << "\n";
