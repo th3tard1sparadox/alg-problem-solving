@@ -40,16 +40,11 @@ int main() {
 
     string s;
     getline(cin, s);
-    cout << "string is: " << s << endl;
     int sLen = s.length();
     int n;
     while(cin) {
-        cout << "string is: " << s << endl;
         vector<int> suffArr = buildArray(s, sLen);
-        cout << "string is: " << s << endl;
         cin >> n;
-        cout << "n is: " << n << endl;
-        cout << "string is: " << s << endl;
         int query;
         for(int i = 0; i < n; i++) {
             cin >> query;
@@ -59,6 +54,7 @@ int main() {
 
         getline(cin, s);
         sLen = s.length();
+        cout << s << endl;
     }
 
     return 0;
