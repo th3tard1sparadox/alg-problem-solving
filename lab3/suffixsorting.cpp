@@ -1,9 +1,19 @@
+/**
+ * This is not a final version as this is too slow and naive.
+ * TODO: make fast.
+ */
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <bits/stdc++.h>
 
 using namespace std;
+
+// class Suffix {
+    // int index;
+    // string suff;
+// }
 
 struct suffix {
     int index;
@@ -39,10 +49,9 @@ int main() {
     // cout.tie(NULL);
 
     string s;
-    getline(cin, s);
-    int sLen = s.length();
     int n;
-    while(cin) {
+    while(getline(cin, s)) {
+        int sLen = s.length();
         vector<int> suffArr = buildArray(s, sLen);
         cin >> n;
         int query;
@@ -51,10 +60,7 @@ int main() {
             cout << suffArr[query] << " ";
         }
         cout << endl;
-
         getline(cin, s);
-        sLen = s.length();
-        cout << s << endl;
     }
 
     return 0;
