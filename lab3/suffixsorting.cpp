@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <bits/stdc++.h>
+#include <cstring>
 
 using namespace std;
 
@@ -17,19 +18,19 @@ using namespace std;
 
 struct suffix {
     int index;
-    string suff;
+    char* suff;
 };
 
 int compSuff(struct suffix first, struct suffix second) {
-    return first.suff.compare(second.suff) < 0 ? 1 : 0;
+    return strcmp(first.suff, second.suff) < 0 ? 1 : 0;
 }
 
-vector<int> buildArray(string & text, int n) {
+vector<int> buildArray(char* text, int n) {
     struct suffix suffixes[n];
 
     for(int i = 0; i < n; i++) {
         suffixes[i].index = i;
-        suffixes[i].suff = text.substr(i);
+        suffixes[i].suff = (text+i);
     }
 
     sort(suffixes, suffixes+n, compSuff);
@@ -52,7 +53,9 @@ int main() {
     int n;
     while(getline(cin, s)) {
         int sLen = s.length();
-        vector<int> suffArr = buildArray(s, sLen);
+        char* newS = new char[sLen + 1];
+        strcpy(newS, s.c_str());
+        vector<int> suffArr = buildArray(newS, sLen);
         cin >> n;
         int query;
         for(int i = 0; i < n; i++) {
@@ -60,6 +63,7 @@ int main() {
             cout << suffArr[query] << " ";
         }
         cout << endl;
+        delete[] newS;
         getline(cin, s);
     }
 
