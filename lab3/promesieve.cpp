@@ -1,27 +1,26 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <utility>
 
 using namespace std;
 
-vector<bool> bm(int n) {
-    vector<bool> b;
-    for(int i = 0; i < n; i++) {
-        cout << i << endl;
-        b.push_back(true);
-    }
+pair<vector<bool>, int> bm(int n) {
+    vector<bool> b(n, true);
     b[0] = false;
     b[1] = false;
-    cout << "hello" << endl;
+
+    int count = 0;
     for(int i = 2; i < n; i++) {
         if(b[i]) {
-            for(int j = 1; j < floor(n / i); j++) {
-                cout << i*j << endl;
+            count++;
+            for(int j = 2; j * i < n; j++) {
                 b[i*j] = false;
             }
         }
     }
-    return b;
+
+    return {b, count};
 }
 
 int main() {
@@ -29,8 +28,9 @@ int main() {
     int cases;
     cin >> n;
     cin >> cases;
-    cout << n << cases << endl;
-    vector<bool> b = bm(n);
+    pair<vector<bool>, int> p = bm(n + 1);
+    cout << p.second << "\n";
+    vector<bool> b = p.first;
     for(int i = 0; i < cases; i ++) {
         int x;
         cin >> x;
