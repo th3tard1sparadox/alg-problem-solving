@@ -1,3 +1,10 @@
+/**
+ * @file primesieve.cpp
+ * @author Annie Wång (annwa858@student.liu.se)
+ * @brief implements the sieve of eratosthenes. The time complexity
+          of it is O(nloglogn).
+ * @date 2022-05-01
+ */
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -5,6 +12,7 @@
 
 using namespace std;
 
+// the sieve of eratosthenes.
 pair<vector<bool>, int> bm(int n) {
     vector<bool> b(n, true);
     b[0] = false;
@@ -23,6 +31,7 @@ pair<vector<bool>, int> bm(int n) {
     return {b, count};
 }
 
+// the main loop.
 int main() {
     int n;
     int cases;

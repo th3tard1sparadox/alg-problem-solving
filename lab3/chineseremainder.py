@@ -1,5 +1,15 @@
+'''
+@file chineseremainder.py
+@author Annie Wång (annwa858@student.liu.se)
+@brief finds solution to the equations x = a (mod n) and
+       x = b (mod m). It does this using the extended euclidean
+       algorithm. The time complexity for this is in total O(nlogn).
+@date 2022-05-01
+'''
+
 import sys
 
+# extended euclidean, iteratively.
 def eucl(a, m):
     m0 = m
     x0 = 0
@@ -23,6 +33,7 @@ def eucl(a, m):
 
     return x1
 
+# put the results together, always mod to keep number small.
 def CR(a, n, b, m):
     K = n * m
 
@@ -31,6 +42,7 @@ def CR(a, n, b, m):
 
     return res % K
 
+# main loop.
 def main():
     T = int(input())
 
